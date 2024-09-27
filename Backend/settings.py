@@ -9,15 +9,12 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+import os
 from pathlib import Path
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-$5a75cl2s)otsb04f8m24@yabaqn_m3e8p0%^$+x)fun1^avk='
@@ -27,6 +24,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+
+'''
+# Seguridad y claves usar solo en etapa de produccion
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'tu_clave_secreta_aqui')
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(',')
+'''
 
 # Application definition
 
@@ -40,8 +44,10 @@ INSTALLED_APPS = [
     
     'corsheaders',
     'rest_framework',
+    'rest_framework_simplejwt',  # Autenticación JWT
     'coreapi',
-    'apps.ventas'
+    'apps.ventas',
+    'apps.users',
 ]
 
 MIDDLEWARE = [
@@ -108,20 +114,24 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
-
-LANGUAGE_CODE = 'en-us'
-
+LANGUAGE_CODE = 'es-us'
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
+USE_L10N = True
 USE_TZ = True
+
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+# Configuración estática
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Configuración de medios
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -129,10 +139,31 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # autorizacion de cors
-CORS_ALLOWED_ORIGINS = ["http://localhost:5173"] # dominio que tiene permitido pedir datos
+CORS_ALLOWED_ORIGINS = ["http://localhost:5177"] # dominio que tiene permitido pedir datos, usarlo solo en etapa de desarrollo
+#CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', '').split(',') # usarlo en etapa de produccion
 
+# Configuración de la autenticación JWT
 
 REST_FRAMEWORK = {
     # [...]
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
 }
+
+
+# Configuración de la caché
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}
+
+# Configuración para la administración
+ADMIN_URL = os.environ.get('ADMIN_URL', 'admin/')

@@ -1,0 +1,31 @@
+# (24) requirements.txt - Dependencias del proyecto
+
+# Django y DRF
+Django>=3.2,<4.0
+djangorestframework>=3.12,<4.0
+django-cors-headers>=3.10,<4.0
+djangorestframework-simplejwt>=5.0,<6.0
+
+# Autenticación y permisos
+djangorestframework-jwt>=1.11,<2.0
+
+# Celery para tareas asíncronas
+celery>=5.0,<6.0
+redis>=3.5,<4.0  # Si utilizas Redis como backend de Celery
+
+# Testing
+pytest>=6.0,<7.0
+pytest-django>=4.0,<5.0
+factory_boy>=3.2,<4.0
+
+# Otras utilidades
+django-filter>=2.4,<3.0
+django-extensions>=3.1,<4.0
+
+# Base de datos (cambiar según tu configuración)
+#psycopg2-binary>=2.9,<3.0  # Para PostgreSQL
+# mysqlclient>=2.0,<3.0  # Para MySQL
+ sqlite3 #es parte de la instalación estándar de Python, así que no es necesario incluirlo.
+
+# Seguridad
+python-decouple>=3.4,<4.0  # Para manejar variables de entorno

@@ -1,2 +1,6 @@
 usuario juangarcesjaimes
 correo jcgarces0@misena.edu.co
+https://github.com/juangarcesjaimes/Gestia-tech.git
+http://127.0.0.1:8000/admin/login/
+usuario django juan
+contrasena @Mycarolin0
